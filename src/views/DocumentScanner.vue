@@ -157,7 +157,7 @@ export default defineComponent({
           /**
            * https://cdn.jsdelivr.net/gh/ColonelParrot/jscanify@master/src/jscanify.min.js
            */
-          scriptJscanify.src = "/assets/js/jscanify/jscanify.min.js";
+          scriptJscanify.src = "/assets/js/jscanify/jscanify.js";
           scriptJscanify.async = true;
           scriptJscanify.onload = () => {
             console.log("jscanify loaded");
