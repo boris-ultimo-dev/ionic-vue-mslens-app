@@ -11,7 +11,7 @@
         <ion-card-header>
           <ion-card-title>MS Lens clone</ion-card-title>
           <ion-card-subtitle>
-            using <code>OpenCV.js</code> and <code>jscanify</code>
+            using <code>opencv.js</code> and <code>jscanify</code>
           </ion-card-subtitle>
         </ion-card-header>
 

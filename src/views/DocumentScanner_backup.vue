@@ -49,7 +49,7 @@ export default defineComponent({
             if (ctx) {
               ctx.drawImage(img, 0, 0);
 
-              // Process the image with OpenCV
+              // Process the image with opencv.js
               const src = cv.imread(canvas);
               const dst = new cv.Mat();
               cv.cvtColor(src, src, cv.COLOR_RGBA2GRAY, 0);

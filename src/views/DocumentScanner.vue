@@ -123,7 +123,7 @@ export default defineComponent({
 
     onMounted(() => {
       if (!window.cv) {
-        loadOpenCVLibs();
+        loadOpencvLibs();
       }
     });
 
@@ -143,16 +143,16 @@ export default defineComponent({
       }
     };
 
-    const loadOpenCVLibs = () => {
+    const loadOpencvLibs = () => {
       try {
-        const scriptOpenCV = document.createElement("script");
+        const scriptOpencv = document.createElement("script");
         /**
          * https://docs.opencv.org/4.7.0/opencv.js
          */
-        scriptOpenCV.src = "/assets/js/opencv-js/v4.7.0/opencv.js";
-        scriptOpenCV.async = true;
-        scriptOpenCV.onload = () => {
-          console.log("OpenCV.js loaded");
+        scriptOpencv.src = "/assets/js/opencv-js/v4.7.0/opencv.js";
+        scriptOpencv.async = true;
+        scriptOpencv.onload = () => {
+          console.log("opencv.js loaded");
           const scriptJscanify = document.createElement("script");
           /**
            * https://cdn.jsdelivr.net/gh/ColonelParrot/jscanify@master/src/jscanify.min.js
@@ -161,13 +161,13 @@ export default defineComponent({
           scriptJscanify.async = true;
           scriptJscanify.onload = () => {
             console.log("jscanify loaded");
-            showToast("OpenCV libraries loaded OK", "bottom");
+            showToast("opencv libraries loaded OK", "bottom");
           };
           document.head.appendChild(scriptJscanify);
         };
-        document.head.appendChild(scriptOpenCV);
+        document.head.appendChild(scriptOpencv);
       } catch (e: any) {
-        console.error("loadOpenCVLibs:", e);
+        console.error("loadOpencvLibs:", e);
         showToast(e.message, "bottom");
       }
     };
@@ -213,9 +213,9 @@ export default defineComponent({
     watch(selImage, (newVal) => {
       try {
         if (!window.cv) {
-          let msg = "OpenCV.js is not initialized yet";
+          let msg = "opencv.js is not initialized yet";
           showToast(msg, "bottom");
-          loadOpenCVLibs();
+          loadOpencvLibs();
           throw new Error(msg);
         }
 
