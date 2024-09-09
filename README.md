@@ -14,6 +14,10 @@ capacitor/cli: 6.1.2
 ## Getting Started
 
 ```bash
+# install ionic/cli
+$ npm i -g @ionic/cli
+
+
 # install dependencies
 $ npm install
 

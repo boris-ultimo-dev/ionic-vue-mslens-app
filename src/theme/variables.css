@@ -2,3 +2,18 @@
 ** For information on how to create your own theme, please see:
 ** http://ionicframework.com/docs/theming/
 */
+
+/* Global Class */
+*,
+body {
+  font-family: AvenirRegular;
+}
+
+/* Helper Class */
+.text-center {
+  text-align: center;
+}
+
+.my-font {
+  font-family: AvenirRegular !important;
+}

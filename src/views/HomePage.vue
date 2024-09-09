@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Home</ion-title>
+        <ion-title class="text-center">Home</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -76,10 +76,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.container {
-  text-align: center;
-  margin-top: 50px;
-}
 code {
   background: aliceblue;
   padding: 4px;
