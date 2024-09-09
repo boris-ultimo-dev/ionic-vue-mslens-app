@@ -71,7 +71,15 @@
 
           <ion-card v-if="selResImageUri" class="mt-0">
             <ion-card-content>
-              <img :src="selResImageUri" alt="Result Image" />
+              <img
+                v-fullscreen-image="{
+                  imageUrl: selResImageUri,
+                  withDownload: false,
+                  animation: 'blur'
+                }"
+                :src="selResImageUri"
+                alt="Result Image"
+              />
             </ion-card-content>
           </ion-card>
         </ion-content>
@@ -257,7 +265,11 @@ export default defineComponent({
     const selectResCanvas = (canvas: { canvas: HTMLCanvasElement }) => {
       try {
         const dataUrl = canvas.canvas.toDataURL();
-        selResImageUri.value = dataUrl;
+        //-- TRICKs
+        selResImageUri.value = undefined;
+        setTimeout(() => {
+          selResImageUri.value = dataUrl;
+        }, 0);
       } catch (e) {
         console.error("selectResCanvas:", e);
       }
