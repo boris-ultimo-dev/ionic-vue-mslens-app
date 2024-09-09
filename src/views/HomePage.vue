@@ -20,7 +20,12 @@
           mobile document scanner designed to run in any JavaScript environment
           for <strong>FREE</strong>.
         </ion-card-content>
-        <ion-button fill="clear" @click="navigateToScan">Go Scan</ion-button>
+
+        <ion-card-header>
+          <ion-button expand="block" color="tertiary" @click="navigateToScan">
+            Go Scan
+          </ion-button>
+        </ion-card-header>
       </ion-card>
     </ion-content>
   </ion-page>
