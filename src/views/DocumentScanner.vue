@@ -3,9 +3,11 @@
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button></ion-back-button>
+          <ion-button class="my-back-btn" @click="goBack">
+            <ion-icon slot="start" :icon="chevronBack"></ion-icon>
+          </ion-button>
         </ion-buttons>
-        <ion-title>Scanner</ion-title>
+        <ion-title class="text-center">Scanner</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -64,6 +66,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, watch, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import {
   IonPage,
   IonHeader,
@@ -75,12 +78,13 @@ import {
   IonThumbnail,
   IonLabel,
   IonButtons,
-  IonBackButton,
   IonChip,
   IonModal,
   IonButton,
+  IonIcon,
   toastController
 } from "@ionic/vue";
+import { chevronBackOutline } from "ionicons/icons";
 
 export default defineComponent({
   name: "DocumentScanner",
@@ -95,12 +99,13 @@ export default defineComponent({
     IonThumbnail,
     IonLabel,
     IonButtons,
-    IonBackButton,
     IonChip,
     IonModal,
-    IonButton
+    IonButton,
+    IonIcon
   },
   setup() {
+    const router = useRouter();
     const containerRef = ref<HTMLDivElement | null>(null);
     const selImage = ref<{ src: string } | undefined>(undefined);
     const canvases = ref<
@@ -114,6 +119,7 @@ export default defineComponent({
     const showModal = ref(false);
     const modalImageSrc = ref<string | undefined>(undefined);
     const modalTitle = ref<string>("");
+    const chevronBack = chevronBackOutline;
 
     const images = [
       { src: "/paper-high.png" },
@@ -126,6 +132,14 @@ export default defineComponent({
         loadOpencvLibs();
       }
     });
+
+    const goBack = () => {
+      try {
+        router.back();
+      } catch (e) {
+        console.error("goBack:", e);
+      }
+    };
 
     const showToast = async (
       message: string,
@@ -270,7 +284,9 @@ export default defineComponent({
       showModal,
       modalImageSrc,
       modalTitle,
-      openModal
+      openModal,
+      chevronBack,
+      goBack
     };
   }
 });
@@ -297,11 +313,6 @@ export default defineComponent({
   width: 100%;
   cursor: pointer;
 }
-.caption {
-  margin-bottom: 8px;
-  font-weight: bold;
-  text-align: center;
-}
 .result-canvas {
   width: 100%;
   object-fit: contain;
@@ -314,5 +325,13 @@ export default defineComponent({
   width: 100%;
   max-height: 80vh;
   object-fit: contain;
+}
+ion-button.my-back-btn {
+  --background: #e7e5ff;
+  --background-hover: #e7e5ff;
+  --background-activated: #88f4be;
+  --background-focused: #88f4be;
+  --color: #7065e4;
+  --border-radius: 8px;
 }
 </style>

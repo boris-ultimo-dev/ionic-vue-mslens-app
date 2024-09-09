@@ -17,3 +17,7 @@ body {
 .my-font {
   font-family: AvenirRegular !important;
 }
+
+.my-back-btn ion-icon[slot="start"] {
+  margin-inline-end: 0;
+}
