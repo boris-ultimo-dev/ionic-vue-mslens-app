@@ -66,6 +66,4 @@ $ gradlew assembleRelease
 
 ![Document Scanner App](screenshot_banner.png)
 
-![MS Lens Clone app](screenshot_scan.png)
-
 &copy; 2024 All rights reserved.
