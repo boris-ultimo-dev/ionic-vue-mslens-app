@@ -1,9 +1,9 @@
 @font-face {
   font-family: "AvenirLight";
-  src: url("assets/fonts/Avenir_Light.ttf") format("truetype");
+  src: url("/assets/fonts/Avenir_Light.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "AvenirRegular";
-  src: url("assets/fonts/Avenir_Regular.ttf") format("truetype");
+  src: url("/assets/fonts/Avenir_Regular.ttf") format("truetype");
 }
