@@ -2,44 +2,37 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-button class="my-back-btn" @click="goBack">
+        <ion-buttons slot="start" class="my-btn-wrap">
+          <ion-button class="my-btn" @click="goBack">
             <ion-icon slot="start" :icon="chevronBack"></ion-icon>
           </ion-button>
         </ion-buttons>
         <ion-title class="text-center">Scanner</ion-title>
+        <ion-buttons slot="primary" class="my-btn-wrap">
+          <ion-button class="my-btn" @click="scanDocument">
+            <ion-icon slot="start" :icon="cameraIcon"></ion-icon>
+          </ion-button>
+        </ion-buttons>
       </ion-toolbar>
     </ion-header>
+
     <ion-content>
-      <ion-list>
-        <ion-item
+      <div>
+        <ion-card
           v-for="(image, index) in images"
           :key="index"
-          @click="setSelImage(image)"
+          @click="openResultModal(image, index)"
           :class="{ selected: selImage && selImage.src === image.src }"
         >
-          <ion-thumbnail slot="start">
-            <img :src="image.src" />
-          </ion-thumbnail>
-          <ion-label>{{ `Image ${index + 1}` }}</ion-label>
-        </ion-item>
-      </ion-list>
-
-      <div ref="containerRef" class="result-container">
-        <div v-if="canvases.length > 0" class="result-row">
-          <div
-            v-for="(canvas, index) in canvases"
-            :key="index"
-            class="result-item"
-            @click="openModal(canvas)"
-          >
-            <ion-chip :color="canvas.chip">{{ canvas.caption }}</ion-chip>
-            <canvas
-              :ref="(el: any) => appendCanvas(el, index)"
-              class="result-canvas"
-            ></canvas>
-          </div>
-        </div>
+          <ion-card-header>
+            <ion-card-subtitle>{{ `Image ${index + 1}` }}</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-thumbnail slot="start">
+              <img :src="image.src" :alt="`Image ${index + 1}`" />
+            </ion-thumbnail>
+          </ion-card-content>
+        </ion-card>
       </div>
 
       <ion-modal
@@ -50,14 +43,37 @@
       >
         <ion-header>
           <ion-toolbar>
-            <ion-title>{{ modalTitle }}</ion-title>
-            <ion-buttons slot="end">
-              <ion-button @click="showModal = false">Close</ion-button>
+            <ion-title class="text-center">{{ modalTitle }}</ion-title>
+            <ion-buttons slot="primary">
+              <ion-button class="my-btn close" @click="closeResultModal">
+                <ion-icon slot="start" :icon="closeIcon"></ion-icon>
+              </ion-button>
             </ion-buttons>
           </ion-toolbar>
         </ion-header>
         <ion-content>
-          <img :src="modalImageSrc" class="modal-image" />
+          <div ref="containerRef" class="result-container">
+            <div v-if="canvases.length > 0" class="result-row">
+              <div
+                v-for="(canvas, index) in canvases"
+                :key="index"
+                class="result-item"
+                @click="selectResCanvas(canvas)"
+              >
+                <ion-chip :color="canvas.chip">{{ canvas.caption }}</ion-chip>
+                <canvas
+                  :ref="(el: any) => appendCanvas(el, index)"
+                  class="result-canvas"
+                ></canvas>
+              </div>
+            </div>
+          </div>
+
+          <ion-card v-if="selResImageUri" class="mt-0">
+            <ion-card-content>
+              <img :src="selResImageUri" alt="Result Image" />
+            </ion-card-content>
+          </ion-card>
         </ion-content>
       </ion-modal>
     </ion-content>
@@ -73,18 +89,23 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
-  IonList,
-  IonItem,
   IonThumbnail,
-  IonLabel,
   IonButtons,
   IonChip,
   IonModal,
   IonButton,
   IonIcon,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
   toastController
 } from "@ionic/vue";
-import { chevronBackOutline } from "ionicons/icons";
+import {
+  chevronBackOutline,
+  cameraOutline,
+  closeOutline
+} from "ionicons/icons";
 
 export default defineComponent({
   name: "DocumentScanner",
@@ -94,15 +115,16 @@ export default defineComponent({
     IonToolbar,
     IonTitle,
     IonContent,
-    IonList,
-    IonItem,
     IonThumbnail,
-    IonLabel,
     IonButtons,
     IonChip,
     IonModal,
     IonButton,
-    IonIcon
+    IonIcon,
+    IonCard,
+    IonCardContent,
+    IonCardHeader,
+    IonCardSubtitle
   },
   setup() {
     const router = useRouter();
@@ -117,9 +139,11 @@ export default defineComponent({
       }[]
     >([]);
     const showModal = ref(false);
-    const modalImageSrc = ref<string | undefined>(undefined);
+    const selResImageUri = ref<string | undefined>(undefined);
     const modalTitle = ref<string>("");
     const chevronBack = chevronBackOutline;
+    const cameraIcon = cameraOutline;
+    const closeIcon = closeOutline;
 
     const images = [
       { src: "/paper-high.png" },
@@ -186,11 +210,31 @@ export default defineComponent({
       }
     };
 
-    const setSelImage = (image: { src: string }) => {
+    const scanDocument = () => {
+      try {
+        //-- TODO
+        console.log("scanDocument");
+      } catch (e) {
+        console.error("scanDocument:", e);
+      }
+    };
+
+    const openResultModal = (image: { src: string }, index: number) => {
       try {
         selImage.value = image;
+        modalTitle.value = `Image ${index}`;
+        selResImageUri.value = undefined; //-- RESET
+        showModal.value = true;
       } catch (e) {
-        console.error("setSelImage:", e);
+        console.error("openResultModal:", e);
+      }
+    };
+
+    const closeResultModal = () => {
+      try {
+        showModal.value = false;
+      } catch (e) {
+        console.error("closeResultModal:", e);
       }
     };
 
@@ -210,17 +254,12 @@ export default defineComponent({
       }
     };
 
-    const openModal = (canvas: {
-      canvas: HTMLCanvasElement;
-      caption: string;
-    }) => {
+    const selectResCanvas = (canvas: { canvas: HTMLCanvasElement }) => {
       try {
         const dataUrl = canvas.canvas.toDataURL();
-        modalImageSrc.value = dataUrl;
-        modalTitle.value = canvas.caption;
-        showModal.value = true;
+        selResImageUri.value = dataUrl;
       } catch (e) {
-        console.error("openModal:", e);
+        console.error("selectResCanvas:", e);
       }
     };
 
@@ -277,16 +316,20 @@ export default defineComponent({
     return {
       images,
       selImage,
-      setSelImage,
+      openResultModal,
+      closeResultModal,
       canvases,
       containerRef,
       appendCanvas,
       showModal,
-      modalImageSrc,
+      selResImageUri,
       modalTitle,
-      openModal,
+      selectResCanvas,
       chevronBack,
-      goBack
+      cameraIcon,
+      closeIcon,
+      goBack,
+      scanDocument
     };
   }
 });
@@ -298,7 +341,6 @@ export default defineComponent({
   flex-direction: column;
   align-items: center;
   padding: 16px;
-  margin-top: 16px;
 }
 .result-row {
   display: flex;
@@ -318,20 +360,27 @@ export default defineComponent({
   object-fit: contain;
 }
 .selected {
-  background-color: rgba(0, 0, 255, 0.1);
-  border: 1px solid blue;
+  background-color: #ffe2de;
+  border: 1px solid #ff6f5b;
+  box-sizing: border-box;
 }
-.modal-image {
-  width: 100%;
-  max-height: 80vh;
-  object-fit: contain;
+ion-buttons.my-btn-wrap {
+  margin-left: 8px;
+  margin-right: 8px;
 }
-ion-button.my-back-btn {
+ion-button.my-btn {
   --background: #e7e5ff;
   --background-hover: #e7e5ff;
   --background-activated: #88f4be;
   --background-focused: #88f4be;
   --color: #7065e4;
   --border-radius: 8px;
+}
+ion-button.my-btn.close {
+  --background: #ffe2de;
+  --background-hover: #ffe2de;
+  --background-activated: #747f9e;
+  --background-focused: #747f9e;
+  --color: #ff6f5b;
 }
 </style>
